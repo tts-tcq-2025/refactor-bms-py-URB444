@@ -2,15 +2,10 @@
 from time import sleep
 import sys
 
-def check_vitals(temperature, pulseRate, spo2):
-    """Pure function: returns (status, message) tuple."""
-    if not (95 <= temperature <= 102):
-        return False, 'Temperature critical!'
-    if not (60 <= pulseRate <= 100):
-        return False, 'Pulse Rate is out of range!'
-    if spo2 < 90:
-        return False, 'Oxygen Saturation out of range!'
-    return True, ''
+def check_vitals(value, low, high, name):
+    if value < low or value > high:
+        return False,f'{name} is out of range!'
+    return True,''
 
 def blink_alert(times=6, delay=1):
     """Handles the blinking alert animation."""
@@ -24,7 +19,15 @@ def blink_alert(times=6, delay=1):
     print()  # Move to next line after blinking
 
 def vitals_ok(temperature, pulseRate, spo2):
-    status, message = check_vitals(temperature, pulseRate, spo2)
+    for value, low, high, name in [
+        (temperature,95, 102, 'Temperature'),
+        (pulseRate, 60, 100, 'Pulse Rate'),
+        (spo2, 0, 90, 'Oxygen Saturation')
+    ]:
+        result = check_vitals(value, low, high, name)
+        print_status(result[0],result[1])
+
+def print_status(status,message):
     if not status:
         print(message)
         blink_alert()
