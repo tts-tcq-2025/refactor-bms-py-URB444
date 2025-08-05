@@ -2,36 +2,32 @@
 from time import sleep
 import sys
 
+def check_vitals(value, low, high, name):
+    # Compare and return status, message
+    if value < low or value > high:
+        return False,f'{name} is out of range!'
+    return True,''
+
+def blink_alert(times=6, delay=1):
+    """Handles the blinking alert animation."""
+    for _ in range(times):
+        print('\r* ', end='')
+        sys.stdout.flush()
+        sleep(delay)
+        print('\r *', end='')
+        sys.stdout.flush()
+        sleep(delay)
+    print()  # Move to next line after blinking
 
 def vitals_ok(temperature, pulseRate, spo2):
-  if temperature > 102 or temperature < 95:
-    print('Temperature critical!')
-    for i in range(6):
-      print('\r* ', end='')
-      sys.stdout.flush()
-      sleep(1)
-      print('\r *', end='')
-      sys.stdout.flush()
-      sleep(1)
-    return False
-  elif pulseRate < 60 or pulseRate > 100:
-    print('Pulse Rate is out of range!')
-    for i in range(6):
-      print('\r* ', end='')
-      sys.stdout.flush()
-      sleep(1)
-      print('\r *', end='')
-      sys.stdout.flush()
-      sleep(1)
-    return False
-  elif spo2 < 90:
-    print('Oxygen Saturation out of range!')
-    for i in range(6):
-      print('\r* ', end='')
-      sys.stdout.flush()
-      sleep(1)
-      print('\r *', end='')
-      sys.stdout.flush()
-      sleep(1)
-    return False
-  return True
+    for value, low, high, name in [
+        (temperature,95, 102, 'Temperature'),
+        (pulseRate, 60, 100, 'Pulse Rate'),
+        (spo2, 0, 90, 'Oxygen Saturation')
+    ]:
+        status,message = check_vitals(value, low, high, name)
+        if not status:
+            print(message)
+            blink_alert()
+            return False
+        return True
