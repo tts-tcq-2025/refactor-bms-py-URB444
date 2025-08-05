@@ -3,6 +3,7 @@ from time import sleep
 import sys
 
 def check_vitals(value, low, high, name):
+    # Compare and return status, message
     if value < low or value > high:
         return False,f'{name} is out of range!'
     return True,''
@@ -24,12 +25,9 @@ def vitals_ok(temperature, pulseRate, spo2):
         (pulseRate, 60, 100, 'Pulse Rate'),
         (spo2, 0, 90, 'Oxygen Saturation')
     ]:
-        result = check_vitals(value, low, high, name)
-        print_status(result[0],result[1])
-
-def print_status(status,message):
-    if not status:
-        print(message)
-        blink_alert()
-        return False
-    return True
+        status,message = check_vitals(value, low, high, name)
+        if not status:
+            print(message)
+            blink_alert()
+            return False
+        return True
