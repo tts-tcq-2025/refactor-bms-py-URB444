@@ -4,11 +4,11 @@ import sys
 
 def check_vitals(temperature, pulseRate, spo2):
     """Pure function: returns (status, message) tuple."""
-    if temperature > 102 or temperature < 95:
+    if not (95 <= temperature <= 102):
         return False, 'Temperature critical!'
-    elif pulseRate < 60 or pulseRate > 100:
+    if not (60 <= pulseRate <= 100):
         return False, 'Pulse Rate is out of range!'
-    elif spo2 < 90:
+    if spo2 < 90:
         return False, 'Oxygen Saturation out of range!'
     return True, ''
 
